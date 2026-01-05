@@ -2,8 +2,10 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # Homepage
     path('', views.home, name='home'),
-    # Thread List (The one you made earlier)
-    path('category/<slug:slug>/', views.thread_list, name='thread_list'),
+    path('create-category/', views.create_category, name='create_category'),
+    path('category/<slug:slug>/', views.category_detail, name='category_detail'),
+    
+    # Add this temporary line:
+    path('clean/', views.clean_db, name='clean_db'),
 ]

@@ -10,7 +10,9 @@
         <ul>
             {% for category in categories %}
                 <li>
-                    <a href="#">{{ category.name }}</a>
+                    <a href="{% url 'category_detail' category.slug %}">
+                        {{ category.name }}
+                    </a>
                     <p>{{ category.description }}</p>
                 </li>
             {% endfor %}
@@ -19,6 +21,7 @@
         <p>No categories found.</p>
     {% endif %}
 
-    <a href="/create-category/">Create New Category</a>
+    <br>
+    <a href="{% url 'create_category' %}">Create New Category</a>
 </body>
 </html>
