@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New Post - {{ category.name }}</title>
+</head>
+<body>
+    <h1>Ask a Question in {{ category.name }}</h1>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <label>Title:</label><br>
+        <input type="text" name="title" required placeholder="What is your question?"><br><br>
+        
+        <label>Details:</label><br>
+        <textarea name="content" rows="5" required placeholder="Describe your doubt..."></textarea><br><br>
+        
+        <button type="submit">Post Discussion</button>
+    </form>
+
+    <br>
+    <a href="{% url 'category_detail' category.slug %}">Cancel</a>
+</body>
+</html>
