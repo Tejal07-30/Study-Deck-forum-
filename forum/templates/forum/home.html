@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>StudyDeck Forum</title>
+</head>
+<body>
+    <h1>Discussion Categories</h1>
+    
+    {% if categories %}
+        <ul>
+            {% for category in categories %}
+                <li>
+                    <a href="#">{{ category.name }}</a>
+                    <p>{{ category.description }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No categories found.</p>
+    {% endif %}
+
+    <a href="/create-category/">Create New Category</a>
+</body>
+</html>
