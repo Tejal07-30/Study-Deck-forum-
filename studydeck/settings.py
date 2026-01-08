@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,9 +26,9 @@ SECRET_KEY = 'django-insecure-krucvuo!*z017qxig$^&6cfdy12iptnl*t#*oji@#ulvt-*az1
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    'tejalgoyal.pythonanywhere.com',
     '127.0.0.1',
     'localhost',
-    'tejalgoyal.pythonanywhere.com',
 ]
 
 # Application definition
@@ -57,12 +57,17 @@ INSTALLED_APPS = [
 SITE_ID = 1
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
         'APP': {
             'client_id': os.environ.get('GOOGLE_CLIENT_ID'),
             'secret': os.environ.get('GOOGLE_CLIENT_SECRET'),
+            'key': ''
         }
     }
 }
+
+
 
 SOCIALACCOUNT_ADAPTER = "accounts.adapter.BITSOnlySocialAccountAdapter"
 
@@ -93,7 +98,7 @@ ROOT_URLCONF = 'studydeck.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
