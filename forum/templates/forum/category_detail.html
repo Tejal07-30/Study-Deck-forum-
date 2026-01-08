@@ -18,10 +18,11 @@
         <ul>
             {% for post in posts %}
                 <li>
-                    <strong>{{ post.title }}</strong>
+                    <a href="{% url 'thread_detail' post.id %}">
+                        <strong>{{ post.title }}</strong>
+                    </a>
                     <br>
                     {{ post.content }}
-                    <br>
                     <small>Posted on: {{ post.created_at }}</small>
                     <hr>
                 </li>
