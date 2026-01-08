@@ -1,35 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ category.name }} - StudyDeck</title>
+    <title>{{ category.name }} – StudyDeck</title>
 </head>
 <body>
 
     <h1>{{ category.name }}</h1>
     <p>{{ category.description }}</p>
 
-    <a href="{% url 'create_post' category.slug %}">
-        <button>+ Start New Discussion</button>
-    </a>
+    {% if user.is_authenticated %}
+        <a href="{% url 'create_thread' category.slug %}">
+            <button>+ Start New Discussion</button>
+        </a>
+    {% else %}
+        <p><a href="/accounts/login/">Login</a> to start a discussion.</p>
+    {% endif %}
 
     <hr>
 
-    <h3>Discussions</h3>
+    <h2>Discussions</h2>
 
-    {% if posts %}
+    {% if threads %}
         <ul>
-            {% for post in posts %}
+            {% for thread in threads %}
                 <li>
-                    <!-- THIS IS THE THREAD LINK -->
-                    <a href="{% url 'thread_detail' post.id %}">
-                        <strong>{{ post.title }}</strong>
+                    <a href="{% url 'thread_detail' thread.id %}">
+                        <strong>{{ thread.title }}</strong>
                     </a>
                     <br>
-                    {{ post.content }}
+                    {{ thread.content }}
                     <br>
-                    <small>Posted on: {{ post.created_at }}</small>
+                    <small>
+                        Posted by {{ thread.author.email }}
+                        on {{ thread.created_at }}
+                    </small>
+                    <hr>
                 </li>
-                <hr>
             {% endfor %}
         </ul>
     {% else %}
@@ -37,7 +43,7 @@
     {% endif %}
 
     <br>
-    <a href="/">Back to Home</a>
+    <a href="{% url 'home' %}">← Back to Home</a>
 
 </body>
 </html>
