@@ -25,7 +25,12 @@ SECRET_KEY = 'django-insecure-krucvuo!*z017qxig$^&6cfdy12iptnl*t#*oji@#ulvt-*az1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'tejalgoyal.pythonanywhere.com',
+]
+
 
 
 # Application definition
@@ -157,6 +162,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+CSRF_TRUSTED_ORIGINS = [
+    'https://tejalgoyal.pythonanywhere.com',
+]
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
