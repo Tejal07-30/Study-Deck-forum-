@@ -20,9 +20,8 @@
     {% for post in posts %}
         <li>
             <a href="{% url 'thread_detail' post.id %}">
-                <a href="{% url 'thread_detail' post.id %}">
-                    <strong>{{ post.title }}</strong>
-                </a>
+                <strong>{{ post.title }}</strong>
+                
             </a>
             <br>
             {{ post.content }}
