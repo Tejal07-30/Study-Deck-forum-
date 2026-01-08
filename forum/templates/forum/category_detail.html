@@ -5,38 +5,39 @@
 </head>
 <body>
 
-<h1>{{ category.name }}</h1>
-<p>{{ category.description }}</p>
+    <h1>{{ category.name }}</h1>
+    <p>{{ category.description }}</p>
 
-<a href="{% url 'create_post' category.slug %}">
-    <button>+ Start New Discussion</button>
-</a>
+    <a href="{% url 'create_post' category.slug %}">
+        <button>+ Start New Discussion</button>
+    </a>
 
-<hr>
-<h3>Discussions</h3>
+    <hr>
 
-{% if posts %}
-<ul>
-    {% for post in posts %}
-        <li>
-            <a href="{% url 'thread_detail' post.id %}">
-                <strong>{{ post.title }}</strong>
-                
-            </a>
-            <br>
-            {{ post.content }}
-            <br>
-            <small>Posted on: {{ post.created_at }}</small>
-            
-        </li>
-    {% endfor %}
-</ul>
-{% else %}
-<p>No discussions yet. Be the first to ask a question!</p>
-{% endif %}
+    <h3>Discussions</h3>
 
-<br>
-<a href="/">Back to Home</a>
+    {% if posts %}
+        <ul>
+            {% for post in posts %}
+                <li>
+                    <!-- THIS IS THE THREAD LINK -->
+                    <a href="{% url 'thread_detail' post.id %}">
+                        <strong>{{ post.title }}</strong>
+                    </a>
+                    <br>
+                    {{ post.content }}
+                    <br>
+                    <small>Posted on: {{ post.created_at }}</small>
+                </li>
+                <hr>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No discussions yet. Be the first to ask a question!</p>
+    {% endif %}
+
+    <br>
+    <a href="/">Back to Home</a>
 
 </body>
 </html>
