@@ -21,10 +21,13 @@ def create_category(request):
 
 def category_detail(request, slug):
     category = get_object_or_404(Category, slug=slug)
-    # Get all posts for this category, newest first
-    posts = category.posts.all().order_by('-created_at')
-    context = {'category': category, 'posts': posts}
-    return render(request, 'forum/category_detail.html', context)
+    posts = Post.objects.filter(category=category).order_by('-created_at')
+
+    return render(request, 'forum/category_detail.html', {
+        'category': category,
+        'posts': posts
+    })
+
 
 def create_post(request, slug):
     category = get_object_or_404(Category, slug=slug)
@@ -33,15 +36,16 @@ def create_post(request, slug):
         title = request.POST.get('title')
         content = request.POST.get('content')
         
-        # Save the new post inside this specific category
+        
         Post.objects.create(category=category, title=title, content=content)
         
-        # Go back to the category page to see the new post
+        
         return redirect('category_detail', slug=slug)
         
     return render(request, 'forum/create_post.html', {'category': category})
 def thread_detail(request, thread_id):
-    thread = get_object_or_404(Thread, id=thread_id)
+    thread = get_object_or_404(Post, id=thread_id)
+    replies = thread.replies.all()
 
     if request.method == "POST":
         form = ReplyForm(request.POST)
@@ -50,12 +54,14 @@ def thread_detail(request, thread_id):
             reply.thread = thread
             reply.author = request.user
             reply.save()
-            return redirect("thread_detail", thread_id=thread.id)
+            return redirect('thread_detail', thread_id=thread.id)
     else:
         form = ReplyForm()
 
-    return render(request, "forum/thread_detail.html", {
-        "thread": thread,
-        "form": form
+    return render(request, 'forum/thread_detail.html', {
+        'thread': thread,
+        'replies': replies,
+        'form': form
     })
+
 
