@@ -4,53 +4,46 @@
     <title>{{ thread.title }}</title>
 </head>
 <body>
-    <h1>{{ thread.title }}</h1>
 
-    <p>{{ thread.content }}</p>
+<h1>{{ thread.title }}</h1>
+<p>{{ thread.content }}</p>
 
-    <p>
-        <small>
-            Posted by {{ thread.author.email }}
-            on {{ thread.created_at }}
-        </small>
-    </p>
+<small>
+    Posted by {{ thread.author.email }} on {{ thread.created_at }}
+</small>
 
-    <hr>
+<hr>
 
-    <h2>Replies</h2>
+<h2>Replies</h2>
 
 {% if thread.replies.all %}
-    <ul>
-        {% for reply in thread.replies.all %}
-            <li>
-                <p>{{ reply.content }}</p>
-                <small>
-                    By {{ reply.author.email }} on {{ reply.created_at }}
-                </small>
-            </li>
-        {% endfor %}
-    </ul>
+<ul>
+    {% for reply in thread.replies.all %}
+        <li>
+            <p>{{ reply.content }}</p>
+            <small>
+                By {{ reply.author.email }} on {{ reply.created_at }}
+            </small>
+            <hr>
+        </li>
+    {% endfor %}
+</ul>
 {% else %}
-    <p>No replies yet.</p>
+<p>No replies yet.</p>
 {% endif %}
 
 <hr>
 
-<h3>Add a Reply</h3>
+<h3>Add Reply</h3>
 
-{% if user.is_authenticated %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Post Reply</button>
-    </form>
-{% else %}
-    <p>You must be logged in to reply.</p>
-{% endif %}
+<form method="post" action="{% url 'add_reply' thread.id %}">
+    {% csrf_token %}
+    <textarea name="content" rows="4" cols="50" required></textarea><br><br>
+    <button type="submit">Reply</button>
+</form>
 
 <br>
-<a href="/">Back to Home</a>
-
+<a href="{% url 'category_detail' thread.category.slug %}">Back to Category</a>
 
 </body>
 </html>

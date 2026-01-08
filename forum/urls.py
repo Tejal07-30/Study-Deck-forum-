@@ -1,7 +1,16 @@
 from django.urls import path
-from . import views
+from .views import (
+    home,
+    category_detail,
+    create_post,
+    thread_detail,
+    add_reply,
+)
 
 urlpatterns = [
-    path("", views.home, name="home"),
-    path("thread/<int:thread_id>/", views.thread_detail, name="thread_detail"),
+    path('', home, name='home'),
+    path('category/<slug:slug>/', category_detail, name='category_detail'),
+    path('category/<slug:slug>/new/', create_post, name='create_post'),
+    path('thread/<int:thread_id>/', thread_detail, name='thread_detail'),
+    path('thread/<int:thread_id>/reply/', add_reply, name='add_reply'),
 ]

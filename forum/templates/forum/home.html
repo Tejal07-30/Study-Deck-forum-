@@ -4,13 +4,23 @@
     <title>StudyDeck Forum</title>
 </head>
 <body>
-    <h1>Discussion Categories</h1>
-    
+
+<h1>Discussion Categories</h1>
+
+{% if categories %}
     {% for category in categories %}
-    <li>
-        <h2>{{ category.name }}</h2>
+        <hr>
+
+        
+        <h2>
+            <a href="{% url 'category_detail' category.slug %}">
+                {{ category.name }}
+            </a>
+        </h2>
+
         <p>{{ category.description }}</p>
 
+        <!-- THREADS UNDER CATEGORY -->
         {% if category.threads.all %}
             <ul>
                 {% for thread in category.threads.all %}
@@ -24,11 +34,11 @@
         {% else %}
             <p>No threads in this category.</p>
         {% endif %}
-    </li>
-{% endfor %}
 
+    {% endfor %}
+{% else %}
+    <p>No categories available.</p>
+{% endif %}
 
-    <br>
-    
 </body>
 </html>
