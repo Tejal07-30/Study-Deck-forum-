@@ -31,8 +31,6 @@ ALLOWED_HOSTS = [
     'tejalgoyal.pythonanywhere.com',
 ]
 
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -59,10 +57,13 @@ INSTALLED_APPS = [
 SITE_ID = 1
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        'SCOPE': ['profile', 'email'],
-        'AUTH_PARAMS': {'access_type': 'online'}
+        'APP': {
+            'client_id': os.environ.get('GOOGLE_CLIENT_ID'),
+            'secret': os.environ.get('GOOGLE_CLIENT_SECRET'),
+        }
     }
 }
+
 SOCIALACCOUNT_ADAPTER = "accounts.adapter.BITSOnlySocialAccountAdapter"
 
 LOGIN_REDIRECT_URL = '/'
