@@ -6,22 +6,29 @@
 <body>
     <h1>Discussion Categories</h1>
     
-    {% if categories %}
-        <ul>
-            {% for category in categories %}
-                <li>
-                    <a href="{% url 'category_detail' category.slug %}">
-                        {{ category.name }}
-                    </a>
-                    <p>{{ category.description }}</p>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No categories found.</p>
-    {% endif %}
+    {% for category in categories %}
+    <li>
+        <h2>{{ category.name }}</h2>
+        <p>{{ category.description }}</p>
+
+        {% if category.threads.all %}
+            <ul>
+                {% for thread in category.threads.all %}
+                    <li>
+                        <a href="{% url 'thread_detail' thread.id %}">
+                            {{ thread.title }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No threads in this category.</p>
+        {% endif %}
+    </li>
+{% endfor %}
+
 
     <br>
-    <a href="{% url 'create_category' %}">Create New Category</a>
+    
 </body>
 </html>

@@ -1,11 +1,14 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.utils.text import slugify
-from .models import Category, Post
+from django.shortcuts import render
+from .models import Category, Thread
+from django.shortcuts import render, get_object_or_404, redirect
+from .forms import ReplyForm
+
 
 def home(request):
-    categories = Category.objects.all()
-    context = {'categories': categories}
-    return render(request, 'forum/home.html', context)
+    categories = Category.objects.prefetch_related("threads")
+    return render(request, "forum/home.html", {
+        "categories": categories
+    })
 
 def create_category(request):
     if request.method == 'POST':
@@ -37,3 +40,22 @@ def create_post(request, slug):
         return redirect('category_detail', slug=slug)
         
     return render(request, 'forum/create_post.html', {'category': category})
+def thread_detail(request, thread_id):
+    thread = get_object_or_404(Thread, id=thread_id)
+
+    if request.method == "POST":
+        form = ReplyForm(request.POST)
+        if form.is_valid():
+            reply = form.save(commit=False)
+            reply.thread = thread
+            reply.author = request.user
+            reply.save()
+            return redirect("thread_detail", thread_id=thread.id)
+    else:
+        form = ReplyForm()
+
+    return render(request, "forum/thread_detail.html", {
+        "thread": thread,
+        "form": form
+    })
+
