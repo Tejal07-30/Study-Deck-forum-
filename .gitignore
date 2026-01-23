@@ -1,14 +1,6 @@
-# Python
+venv/
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
-
-# Django
 db.sqlite3
-*.log
 .env
-
-# Virtual env
-venv/
 staticfiles/

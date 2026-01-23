@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-krucvuo!*z017qxig$^&6cfdy12iptnl*t#*oji@#ulvt-*az1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['yourusername.pythonanywhere.com']
+ALLOWED_HOSTS = ['*']
 
 
 
@@ -49,9 +49,9 @@ INSTALLED_APPS = [
 
 
 
-LOGIN_URL = '/login/user/'
-LOGIN_REDIRECT_URL = '/home/'
-LOGOUT_REDIRECT_URL = '/login/user/'
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 
 
@@ -140,6 +140,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://tejalgoyal.pythonanywhere.com',
+    'http://127.0.0.1',
+    'http://localhost',
 ]
+
 
