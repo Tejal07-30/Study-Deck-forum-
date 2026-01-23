@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Reply</title>
+</head>
+<body>
+
+<h2>Edit Reply</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <textarea name="content" required>{{ reply.content }}</textarea>
+    <br>
+    <button type="submit">Save Changes</button>
+</form>
+
+<br>
+<a href="{% url 'thread_detail' reply.thread.id %}">Cancel</a>
+
+</body>
+</html>

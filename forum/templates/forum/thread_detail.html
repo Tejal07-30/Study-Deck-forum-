@@ -9,41 +9,132 @@
 <p>{{ thread.content }}</p>
 
 <small>
-    Posted by {{ thread.author.email }} on {{ thread.created_at }}
+    Posted by {{ thread.author }} on {{ thread.created_at }}
 </small>
+{% if user == thread.author or user.is_superuser %}
+    <form method="post" action="{% url 'delete_thread' thread.id %}">
+        {% csrf_token %}
+        <button type="submit" style="color:red;">Delete Thread</button>
+    </form>
+{% endif %}
+
+<!-- 🔐 ADMIN LOCK / UNLOCK -->
+{% if user.is_superuser %}
+    <form method="post" action="{% url 'toggle_thread_lock' thread.id %}">
+        {% csrf_token %}
+        {% if thread.is_locked %}
+            <button type="submit">Unlock Thread</button>
+        {% else %}
+            <button type="submit">Lock Thread</button>
+        {% endif %}
+    </form>
+{% endif %}
 
 <hr>
 
 <h2>Replies</h2>
 
-{% if thread.replies.all %}
 <ul>
-    {% for reply in thread.replies.all %}
+{% for reply in replies %}
+    {% if not reply.parent %}
         <li>
-            <p>{{ reply.content }}</p>
-            <small>
-                By {{ reply.author.email }} on {{ reply.created_at }}
-            </small>
-            <hr>
+            <strong>{{ reply.author }}</strong>: {{ reply.content }} <br>
+            <small>{{ reply.created_at }}</small>
+
+            <form method="post" action="{% url 'report_reply' reply.id %}">
+                {% csrf_token %}
+                 <input type="text" name="reason" placeholder="Reason" required>
+                <button type="submit">Report</button>
+            </form>
+
+
+            <!-- 👍 UPVOTE (PARENT REPLY) -->
+            <form method="post" action="{% url 'toggle_reply_upvote' reply.id %}">
+                {% csrf_token %}
+                <button type="submit">
+                    👍 {{ reply.votes.count }}
+                </button>
+            </form>
+
+            <!-- 🗑 DELETE (PARENT REPLY) -->
+            {% if user == reply.author or user.is_superuser %}
+                <form method="post" action="{% url 'delete_reply' reply.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Delete</button>
+                </form>
+
+                <a href="{% url 'edit_reply' reply.id %}">Edit</a>
+            {% endif %}
+
+
+            <!-- 🔁 CHILD (NESTED) REPLIES -->
+            <ul>
+            {% for child in reply.children.all %}
+                <li>
+                    <strong>{{ child.author }}</strong>: {{ child.content }} <br>
+                    <small>{{ child.created_at }}</small>
+
+                    <!-- 👍 UPVOTE (CHILD REPLY) -->
+                    <form method="post" action="{% url 'toggle_reply_upvote' child.id %}">
+                        {% csrf_token %}
+                        <button type="submit">
+                            👍 {{ child.votes.count }}
+                        </button>
+                    </form>
+
+                    <form method="post" action="{% url 'report_reply' child.id %}">
+                        {% csrf_token %}
+                        <input type="text" name="reason" placeholder="Reason" required>
+                        <button type="submit">Report</button>
+                    </form>
+
+
+                    <!-- 🗑 DELETE (CHILD REPLY) -->
+                    {% if user == child.author or user.is_superuser %}
+                        <form method="post" action="{% url 'delete_reply' child.id %}">
+                            {% csrf_token %}
+                            <button type="submit">Delete</button>
+                        </form>
+
+                        <a href="{% url 'edit_reply' child.id %}">Edit</a>
+                    {% endif %}
+
+                </li>
+            {% endfor %}
+            </ul>
+
+            <!-- ➕ REPLY TO THIS REPLY -->
+            {% if not thread.is_locked %}
+                <form method="post" action="{% url 'add_reply' thread.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="parent_id" value="{{ reply.id }}">
+                    <textarea name="content" required></textarea>
+                    <button type="submit">Reply</button>
+                </form>
+            {% endif %}
+
         </li>
-    {% endfor %}
+        <hr>
+    {% endif %}
+{% endfor %}
 </ul>
-{% else %}
-<p>No replies yet.</p>
-{% endif %}
 
 <hr>
 
-<h3>Add Reply</h3>
+<h3>Add Reply (Top-level)</h3>
 
-<form method="post" action="{% url 'add_reply' thread.id %}">
-    {% csrf_token %}
-    <textarea name="content" rows="4" cols="50" required></textarea><br><br>
-    <button type="submit">Reply</button>
-</form>
+{% if not thread.is_locked %}
+    <form method="post" action="{% url 'add_reply' thread.id %}">
+        {% csrf_token %}
+        <textarea name="content" required></textarea>
+        <button type="submit">Reply</button>
+    </form>
+{% else %}
+    <p><strong>This thread is locked. No more replies allowed.</strong></p>
+{% endif %}
 
 <br>
-<a href="{% url 'category_detail' thread.category.slug %}">Back to Category</a>
+<a href="{% url 'home' %}">Back to Home</a>
 
 </body>
 </html>
